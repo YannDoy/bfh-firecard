@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "midata-nodejs": "github:MIDATAcooperative/midata-nodejs"
+  }
+}
