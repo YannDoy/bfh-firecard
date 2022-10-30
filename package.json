@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "midata-nodejs": "github:MIDATAcooperative/midata-nodejs"
+    "midata-nodejs": "git+https://github.com/MIDATAcooperative/midata-nodejs.git"
   }
 }
