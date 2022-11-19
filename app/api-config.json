@@ -1,0 +1,7 @@
+{
+  "clientId": "firecard",
+  "redirectUrl": "firecard.app:/oauthredirect",
+  "authorizationEndpoint": "/authservice",
+  "tokenEndpoint": "/v1/token",
+  "baseUri": "https://test.midata.coop"
+}
