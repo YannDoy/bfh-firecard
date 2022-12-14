@@ -1,23 +1,37 @@
-import {FC, useState} from "react";
-import {useMonthlyAppointments} from "../hooks/appointement";
-import XDate from "xdate";
-import {Calendar} from "react-native-calendars";
-import {month2Date} from "../midata/appointement/monthly";
+import {FC} from "react";
+import {MonthlyAppointment} from "../models/appointment/monthly";
+import {Calendar, DateData} from "react-native-calendars";
+import {dateFormat, dateTimeFormat, setYearMonthDate} from "../utils/date";
 
-export const AppointmentCalendar: FC = () => {
-    const date = new Date()
+export const AppointmentCalendar: FC<{
+    appointments: MonthlyAppointment[]|undefined,
+    isLoading: boolean,
+    date: Date,
+    onDateChange: (date: Date) => void
+}> = ({appointments, isLoading, date, onDateChange}) => {
 
-    const [monthNum, setMonthNum] = useState<number>(date.getFullYear() * 12 + date.getMonth())
-    const monthlyAppointments = useMonthlyAppointments(monthNum)
+    const onMonthChange = (change: DateData) =>
+        onDateChange(setYearMonthDate(date, change.year, change.month, 1))
 
-    const marks = monthlyAppointments.isFetched
-        ? monthlyAppointments.data!.reduce((acc, item) =>
-            ({...acc, [item.start.toDateString()] : {marked: true} }), {})
-        : {}
+    const onDayPress = (change: DateData) =>
+        onDateChange(setYearMonthDate(date, change.year, change.month, change.day))
+
+    const marksDates = (appointments ?? [])
+        .filter(appointment => appointment.start !== undefined)
+        .reduce((acc: any, appointment) => {
+            const day = dateFormat(date)
+            const key = dateFormat(new Date(appointment.start!))
+            return {
+                ...acc,
+                [key]: { marked: true, selected: key === day }
+            }
+        }, {})
 
     return <Calendar
-        month={monthNum ? new XDate(month2Date(monthNum)) : undefined}
-        onMonthChange={change => setMonthNum(change.year * 12 + (change.month - 1))}
-        markedDates={marks}
-        onDayPress={(date) => console.log(date)} />
+        displayLoadingIndicator={isLoading}
+        enableSwipeMonths={true}
+        initialDate={dateTimeFormat(date)}
+        markedDates={marksDates}
+        onDayPress={onDayPress}
+        onMonthChange={onMonthChange} />
 }
