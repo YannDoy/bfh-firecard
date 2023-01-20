@@ -1,7 +1,8 @@
 import {FC} from "react";
 import {MonthlyAppointment} from "../models/appointment/monthly";
-import {Calendar, DateData} from "react-native-calendars";
 import {dateFormat, dateTimeFormat, setYearMonthDate} from "../utils/date";
+import {Text} from "react-native-paper";
+import ReactNativeCalendarStrip from "react-native-calendar-strip";
 
 export const AppointmentCalendar: FC<{
     appointments: MonthlyAppointment[]|undefined,
@@ -10,11 +11,13 @@ export const AppointmentCalendar: FC<{
     onDateChange: (date: Date) => void
 }> = ({appointments, isLoading, date, onDateChange}) => {
 
+    /*
     const onMonthChange = (change: DateData) =>
         onDateChange(setYearMonthDate(date, change.year, change.month, 1))
 
     const onDayPress = (change: DateData) =>
         onDateChange(setYearMonthDate(date, change.year, change.month, change.day))
+*/
 
     const marksDates = (appointments ?? [])
         .filter(appointment => appointment.start !== undefined)
@@ -27,11 +30,16 @@ export const AppointmentCalendar: FC<{
             }
         }, {})
 
+    return <ReactNativeCalendarStrip
+        scrollable={true}
+        style={{backgroundColor: "royalblue"}} />
+    return <Text>{JSON.stringify(marksDates)}</Text>
+    /*
     return <Calendar
         displayLoadingIndicator={isLoading}
         enableSwipeMonths={true}
         initialDate={dateTimeFormat(date)}
         markedDates={marksDates}
         onDayPress={onDayPress}
-        onMonthChange={onMonthChange} />
+        onMonthChange={onMonthChange} />*/
 }

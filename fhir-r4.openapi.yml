@@ -1,0 +1,124 @@
+openapi: 3.0.1
+info:
+  title: Fast Health Interoperability Resources (FHIR)
+  version: R4
+paths:
+  /Appointment:
+    get:
+      description: Search appointment
+      parameters:
+        - in: query
+          name: start
+          schema: { $ref: "#/components/schemas/dateFilter" }
+        - in: query
+          name: end
+          schema: { $ref: "#/components/schemas/dateFilter" }
+      responses:
+        200:
+          description: Search Result
+          content:
+            "application/fhir+json; fhirVersion=4.0":
+              schema:
+                type: object
+                readOnly: true
+                properties:
+                  entry:
+                    type: array
+                    readOnly: true
+                    items:
+                      readOnly: true
+                      type: object
+                      properties:
+                        resource:
+                          $ref: "#/components/schemas/Appointment"
+    post:
+      description: Attempt to create appointment
+      requestBody:
+        content:
+          "application/fhir+json; fhirVersion=4.0":
+            schema:
+              $ref: "#/components/schemas/NewAppointment"
+      responses:
+        201:
+          description: Appointment created
+          content:
+            "application/fhir+json; fhirVersion=4.0":
+              schema:
+                $ref: "#/components/schemas/Appointment"
+components:
+  schemas:
+    dateFilter:
+      type: array
+      items:
+        type: string
+        pattern: ^(lt|gt|le|ge)?([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$
+    instant:
+      type: string
+      pattern: ^([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\.[0-9]+)?(Z|(\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00))$
+    AppointmentStatus:
+      type: string
+      enum: [proposed,pending,booked,arrived,fulfilled,cancelled,noshow,entered-in-error,checked-in,waitlist]
+    ParticipantStatus:
+      type: string
+      enum: [accepted,declined,tentative,needs-action]
+    NewAppointment:
+      type: object
+      required:
+        - resourceType
+        - status
+      properties:
+        resourceType:
+          type: string
+          enum: [Appointment]
+        status:
+          $ref: "#/components/schemas/AppointmentStatus"
+        start:
+          $ref: "#/components/schemas/instant"
+        end:
+          $ref: "#/components/schemas/instant"
+        description:
+          type: string
+        comment:
+          type: string
+        patientInstruction:
+          type: string
+        participant:
+          type: array
+          minimum: 1
+          items: { $ref: "#/components/schemas/Participant" }
+    Participant:
+      type: object
+      required:
+        - status
+      properties:
+        status: { $ref: "#/components/schemas/ParticipantStatus" }
+        actor:
+          oneOf:
+            - type: object
+              properties:
+                identifier:
+                  type: object
+                  properties:
+                    system: { type: string }
+                    value: { type: string }
+            - type: object
+              properties:
+                reference: { type: string }
+                display: { type: string }
+    Appointment:
+      allOf:
+        - type: object
+          required:
+            - id
+            - meta
+          properties:
+            id:
+              type: string
+            meta:
+              type: object
+              required:
+                - versionId
+              properties:
+                versionId:
+                  type: string
+        - $ref: "#/components/schemas/NewAppointment"

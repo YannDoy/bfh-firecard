@@ -15,7 +15,6 @@ export type InternalData = {
     readonly conflict?: Appointment
 }
 
-
 export class AppointmentContext {
     static of(oauth: Session, mutate: (_: string) => void, props: MonthlyAppointment) {
         const lenses = makeLenses(oauth.reference)
@@ -113,7 +112,7 @@ export class AppointmentContext {
                 .filter(i => i !== undefined)
                 .forEach(url => this.internal.mutate(url as string))
 
-            // Map synced appointment context
+            // Map synced appointments context
             return new AppointmentContext({
                 ...this.internal,
                 draft: result,

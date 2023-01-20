@@ -1,0 +1,182 @@
+% Preamble
+\documentclass[authorontitle=true]{bfhbeamer}
+
+% Packages
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{caption}
+\usepackage{pgf-umlcd}
+\usepackage{textcomp}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{soul}
+\LoadBFHModule{terminal}
+\LoadBFHModule{boxes}
+\LoadBFHModule{listings}
+\usetikzlibrary{automata, arrows.meta, positioning}
+
+% Metadata
+\title{Shared Calender for Medical Health Apps}
+\date{\today}
+\subtitle{Project 2}
+\author[M. Doy]{Yann Mickael DOY}
+
+% Document
+\begin{document}
+
+    \maketitle
+
+    \section{Introduction}
+    \frame{\sectionpage}
+
+    \begin{frame}{Context}
+        \begin{itemize}
+            \item Appointment \textrightarrow distributed organisation
+            \item Patient use his phone agenda
+            \item Med data are sensitive \textrightarrow dont trust Google, Samsung, etc\ldots
+            \item Integrate patient to med information system (SI)
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}{Initial situation}
+        \begin{itemize}
+            \item Continuation of project of M. Fahrni
+            \item MIDATA Cloud
+            \item FHIR spec (EDI)
+            \item React Native
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}{Goals}
+        \begin{itemize}
+            \item Make accessible FHIR appointment to smartphone
+            \item Ensure privacy (sensitive med data)
+            \item Make reliable proof of concept (POC)
+        \end{itemize}
+    \end{frame}
+
+    \section{Solution}
+    \frame{\sectionpage}
+
+    \begin{frame}{Midata}
+        It's just \textbf{REST} api with fhir resource backend server
+        authenticated with \textbf{OAuth2} \newline
+        \begin{figure}
+            \centering
+            \includegraphics[width=11cm]{./images/midatahome}
+            \caption{Homepage MIDATA COOP}
+        \end{figure}
+    \end{frame}
+
+    \begin{frame}{FHIR}
+        \begin{itemize}
+            \item REST API
+            \item JSON document with specified schema
+            \item Appointment FHIR resource
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}{Operating principle}
+        \begin{figure}
+            \centering
+            \includegraphics[width=11cm]{./images/operating-principle}
+            \caption{operating principle}
+            \label{fig:oppricipal}
+        \end{figure}
+    \end{frame}
+
+    \section{Design}
+    \frame{\sectionpage}
+
+    \begin{frame}{Technologies}
+        \begin{figure}
+            \centering
+            \includegraphics[width=10cm]{./images/techno}
+            \caption{Technologies}
+        \end{figure}
+    \end{frame}
+
+    \begin{frame}{Optic}
+        \begin{minipage}{0.5\textwidth}
+            \begin{itemize}
+                \item Functional programming concept
+                \item Fusion between getter and modify
+                \item Immutable modification
+                \item Composable
+            \end{itemize}
+        \end{minipage}
+        \hfill
+        \begin{minipage}{0.45\textwidth}
+            \vspace{1cm}
+            \begin{figure}
+                \centering
+                \includegraphics[width=5cm]{./images/lens2}
+                \caption{Optic analogy}
+            \end{figure}
+        \end{minipage}
+    \end{frame}
+
+    \begin{frame}{Vercel SWR}
+        \begin{minipage}{0.5\textwidth}
+            \begin{itemize}
+                \item React Idiomatic Hook
+                \item Perform async task
+                \item Cache result
+                \item Invalidation
+                \item Retry / Reconnection / etc\ldots
+            \end{itemize}
+        \end{minipage}
+        \hfill
+        \begin{minipage}{0.45\textwidth}
+            \vspace{1cm}
+            \begin{figure}
+                \centering
+                \includegraphics[width=5cm]{./images/swr}
+                \caption{SWR schema}
+            \end{figure}
+        \end{minipage}
+    \end{frame}
+
+    \section{Conclusion}
+    \label{sec:conclusion}
+    \frame{\sectionpage}
+
+    \begin{frame}{Work done}
+        \begin{itemize}
+            \item Authentication
+            \item Global architecture
+            \item Appointment CRUD
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}{Bachlor thesis}
+        \begin{itemize}
+            \item Notification
+            \item Usability test
+            \item Choose between idea feature
+            \item Use Gantt diagram
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}
+        \begin{center}
+            \huge Thanks
+        \end{center}
+    \end{frame}
+
+%    \begin{frame}{FSM}
+%        \begin{tikzpicture}[->,on grid]
+%            \node[state, initial, accepting] at (0,0)    (V) {View};
+%            \node[state, initial]            at (0,-2)   (E) {Edit};
+%            \node[state]                     at (2,-2)   (S) {Save};
+%            \node[state]                     at (2,0)    (C) {Conflict};
+%            \path (V) edge node {} (E)
+%                  (E) edge node {} (V)
+%                      edge node {} (S)
+%                  (S) edge node {} (C)
+%                      edge node {} (V)
+%                  (C) edge node {} (E)
+%                      edge node {} (V);
+%        \end{tikzpicture}
+%    \end{frame}
+\end{document}

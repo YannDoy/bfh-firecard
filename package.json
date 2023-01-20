@@ -1,60 +1,35 @@
 {
-  "name": "firecard",
-  "version": "0.0.1",
-  "private": true,
+  "name": "bfh-firecard",
+  "version": "1.0.0",
   "scripts": {
-    "android": "react-native run-android",
-    "ios": "react-native run-ios",
-    "start": "react-native start",
     "test": "jest",
-    "lint": "eslint .. --ext .js,.jsx,.ts,.tsx"
+    "android": "react-native run-android"
   },
   "dependencies": {
     "@react-native-community/eslint-config": "^3.2.0",
     "@react-navigation/material-bottom-tabs": "^6.2.9",
     "@react-navigation/native": "^6.1.1",
     "@react-navigation/stack": "^6.3.9",
-    "@types/jest": "^29.2.4",
-    "@types/ramda": "^0.28.20",
+    "@rkrupinski/use-state-machine": "^1.0.2",
+    "@story-health/fhir-r4": "^1.0.1",
     "@types/react": "^18.0.26",
     "@types/react-native": "^0.70.8",
     "@types/react-native-vector-icons": "^6.4.12",
     "@typescript-eslint/eslint-plugin": "^5.46.1",
     "@typescript-eslint/parser": "^5.46.1",
+    "@wellin/react-native-calendars": "^1.1286.0-rc9",
     "eslint": "^8.29.0",
-    "jest": "^29.3.1",
-    "ramda": "^0.28.0",
+    "optics-ts": "^2.4.0",
     "react": "^18.1.0",
     "react-native": "^0.70.6",
     "react-native-app-auth": "^6.4.3",
-    "react-native-calendars": "^1.1275.0",
     "react-native-gesture-handler": "^2.8.0",
+    "react-native-keychain": "^8.1.1",
     "react-native-paper": "^5.0.1",
     "react-native-safe-area-context": "^4.4.1",
     "react-native-screens": "^3.18.2",
     "react-native-vector-icons": "^9.2.0",
-    "robot3": "^0.3.2",
-    "swr": "^2.0.0",
-    "ts-jest": "^29.0.3"
-  },
-  "_devDependencies": {
-    "@babel/core": "^7.20.2",
-    "@babel/runtime": "^7.20.1",
-    "@react-native-community/eslint-config": "^3.2.0",
-    "@tsconfig/react-native": "^2.0.2",
-    "@types/jest": "^29.2.3",
-    "@types/react": "^18.0.25",
-    "@types/react-native": "^0.70.7",
-    "@types/react-native-vector-icons": "^6.4.12",
-    "@types/react-test-renderer": "^18.0.0",
-    "@typescript-eslint/eslint-plugin": "^5.44.0",
-    "@typescript-eslint/parser": "^5.44.0",
-    "babel-jest": "^29.3.1",
-    "eslint": "^8.28.0",
-    "jest": "^29.3.1",
-    "metro-react-native-babel-preset": "^0.73.3",
-    "react-test-renderer": "^18.2.0",
-    "typescript": "^4.9.3"
+    "swr": "^2.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.5",
@@ -62,11 +37,18 @@
     "@babel/runtime": "^7.20.6",
     "@jest/globals": "^29.3.1",
     "@tsconfig/react-native": "^2.0.3",
+    "@types/jest": "^29.2.4",
     "babel-jest": "^29.3.1",
+    "fast-check": "^3.4.0",
+    "jest": "^29.3.1",
     "metro-react-native-babel-preset": "^0.73.4",
+    "ts-jest": "^29.0.3",
     "typescript": "^4.9.4"
   },
   "jest": {
-    "preset": "react-native"
+    "preset": "react-native",
+    "modulePathIgnorePatterns": [
+      ".old/"
+    ]
   }
 }
