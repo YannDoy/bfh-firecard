@@ -2,7 +2,7 @@ import {FC, useState} from "react";
 import {WithAppNavs} from ".";
 import {SafeAreaView, ScrollView} from "react-native";
 import {MidataType, useMidataResource} from "../components/midata";
-import {ActivityIndicator, Card, List, Text} from "react-native-paper";
+import {ActivityIndicator, Card, FAB, List, Portal, Text} from "react-native-paper";
 import {Calendar as RNCalendar, DateData} from "react-native-calendars";
 import dayjs, {Dayjs} from 'dayjs';
 import utc from "dayjs/plugin/utc"
@@ -54,18 +54,21 @@ export const Agenda: FC<WithAppNavs<"Agenda">> = ({navigation: {navigate}}) => {
         .map(event => <List.Item
             key={event.id}
             title={event.id}
-            onPress={() => navigate("Appointment", {id: event.id})}
+            onPress={() => navigate("Appointment", {id: event.id, date: selectedDay.toISOString()})}
             description={event.description ?? event.comment} />)
 
-    return <SafeAreaView>
-        <RNCalendar
-            date={selectedFormatted}
-            markedDates={markedDates}
-            onDayPress={onDayChange}
-            onMonthChange={onDayChange} />
-        <ScrollView>
-            {isLoading && <ActivityIndicator />}
-            {events}
-        </ScrollView>
-    </SafeAreaView>
+    return <>
+        <SafeAreaView>
+            <RNCalendar
+                date={selectedFormatted}
+                markedDates={markedDates}
+                onDayPress={onDayChange}
+                onMonthChange={onDayChange} />
+            <ScrollView>
+                {isLoading && <ActivityIndicator />}
+                {events}
+            </ScrollView>
+            <FAB icon="plus" onPress={() => navigate("Appointment", {date: selectedDay.toISOString()})}/>
+        </SafeAreaView>
+    </>
 }

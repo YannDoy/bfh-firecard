@@ -2,11 +2,12 @@ import {createStackNavigator} from "@react-navigation/stack";
 import {createMaterialBottomTabNavigator} from "@react-navigation/material-bottom-tabs";
 import {RouteProp} from "@react-navigation/core/src/types";
 import {NavigationProp} from "@react-navigation/native";
+import {Dayjs} from "dayjs";
 
 export type AppNavs = {
     Home: undefined,
     Agenda: undefined,
-    Appointment: { id: string },
+    Appointment: { id?: string, date: string },
     Settings: undefined
 }
 
