@@ -27,7 +27,6 @@ export const Appointment: FC<WithAppNavs<"Appointment">> = ({route: {params: {id
                 userReference={userReference}
                 initialMode={id ? "view" : "edit"}
                 initialData={data ?? {
-                    id,
                     resourceType: "Appointment",
                     status: "proposed",
                     start: dayjs(date).toISOString(),
@@ -36,7 +35,8 @@ export const Appointment: FC<WithAppNavs<"Appointment">> = ({route: {params: {id
                         {
                             status: "tentative",
                             actor: {
-                                reference: userReference.replace("Patient/", "")
+                                reference:
+                                    userReference.replace("Patient/", "") as any
                             }
                         }
                     ]
