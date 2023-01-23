@@ -2,8 +2,8 @@
 App
   + Home  
         + Settings  
-        + (Agenda)
-        + Calendar
+        + (Index)
+        + Index
   + Index
         + Propose
         + Pending

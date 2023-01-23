@@ -94,12 +94,12 @@ export const participantForEmail = (email: string): Model => ({
 
 
 
-const participantNameL: Lens<Model, string> = lens.png(s => s.actor.display
+const participantNameL: Lens<Model, string> = lenses.png(s => s.actor.display
     ?? s.actor.identifier?.value
     ?? s.actor.reference
     ?? "N/A")
 
-const selfParticipantL = (reference: string): Lens<Model[], Model> => lens.png(
+const selfParticipantL = (reference: string): Lens<Model[], Model> => lenses.png(
     participants => participants.find(p => p.actor.reference === reference)
         ?? {status: "tentative", actor: { reference }},
     participants => participant => {
@@ -117,16 +117,16 @@ export const selfParticipantStatusL = (reference: string): Lens<Model[], Partici
     propL("status", "tentative") as Lens<Model, ParticipantStatus>
 )
 
-export const isSettledL: Lens<Model[], boolean> = lens.png(
+export const isSettledL: Lens<Model[], boolean> = lenses.png(
     participants => participants.every(p => p.status !== "tentative"),
     participants => bool => bool ? participants : participants.map(p => ({...p, status: "tentative"})))
 
-export const isCancelledL: Lens<Model[], boolean> = lens.png(
+export const isCancelledL: Lens<Model[], boolean> = lenses.png(
     participants => participants.some(p => p.status === "declined"))
 
 export const getName = view(participantNameL)
 
-export const allParticipantsNameL = lens.png<Model[], string[]>(
+export const allParticipantsNameL = lenses.png<Model[], string[]>(
     participants => participants.map(getName),
     participants => names =>  {
         const compares = participants.map(getName)

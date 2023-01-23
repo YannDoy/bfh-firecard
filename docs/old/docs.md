@@ -117,7 +117,7 @@ réalisable par de lens. Dans mon cas j'ai utilisé un libraire optics-ts qui pe
 ```ts
 import * as O from "optics-ts"
 
-// Ici on a une lens.png (d'où le suffix L) qui permet accédé à un champ name
+// Ici on a une lenses.png (d'où le suffix L) qui permet accédé à un champ name
 const nameL = O.optic<{name: string, age: number}>().prop("name")
 
 // ici on recuère le nom
@@ -128,7 +128,7 @@ const name = O.get(nameL, {name: "bob", age: 23})
 const copy = O.set(nameL, "jhon", {name: "bob", age: 23})
 // => copy = {name: "jhon", age: 23}
 
-// Ici on compose un lens.png qui recuère un utilisateur puis le nom
+// Ici on compose un lenses.png qui recuère un utilisateur puis le nom
 const userNameL = O.optic<{user: {name: string, age: number}}>()
     .prop("user")
     .compose(nameL)
@@ -198,7 +198,7 @@ avec le diff de votre version vs celle du server et de résoudre en bonne intél
 qui arbitrera le conflit.
 
 Le serveur posède egalement un historique de tous les version permettant potentiellement
-offrire des fonctionnalité similaire à git 
+offrire des fonctionnalité similaire à git. 
 
 ### Modèle
 

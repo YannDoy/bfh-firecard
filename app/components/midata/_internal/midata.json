@@ -2,6 +2,7 @@
   "clientId": "firecard",
   "redirectUrl": "firecard.app:/oauthredirect",
   "authorizationEndpoint": "/authservice",
+  "revocationEndpoint": "",
   "tokenEndpoint": "/v1/token",
   "baseUri": "https://test.midata.coop",
   "mimeType": "application/fhir+json; fhirVersion=4.0"

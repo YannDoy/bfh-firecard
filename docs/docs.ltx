@@ -1,0 +1,280 @@
+%============================ MAIN DOCUMENT ================================
+% define document class
+\documentclass[
+    a4paper               % paper format
+,bibliography=totoc   % If enabled add bibliography to TOC
+,listof=totoc         % If enabled add lists to TOC
+,monolingual
+]{bfhthesis}              % KOMA-script report
+
+\usepackage[
+    hidelinks,
+    pdfusetitle,
+]{hyperref}
+\usepackage{listings}
+
+\usepackage{amsmath}
+\usepackage{graphicx}
+
+\begin{document}
+    \frontmatter
+    \title{Project 2}
+    \subtitle{Shared Calender for Medical Health Apps}
+    \author{Yann Mickael DOY}
+    \institution{Bern University of Applied Sciences}
+    \department{Technik und Informatik}
+    %\titlegraphic{\includegraphics[width=\width]{example-image}}
+    \advisor{Prof. Emanuel BENOIST}
+
+    \maketitle
+    \addchap{Abstract}
+
+    This project 2 is a continuation of the bachelor thesis carried out by M. Fahrni
+    aiming at developing a smartphone application for appointment management (Appointment)
+    using Cloud MIDATA which is a SaaS providing an implementation of the
+    the FHIR (Fast Health Interoperability Resources) specification
+    which is a standard JSON and XML document format exchanged through an HTTP REST API
+    in order to interconnect the different information systems within the medical world.
+
+    \tableofcontents
+    \mainmatter
+
+    \chapter{Introduction}
+        \section{Privacy}
+            One of the major issues that this project aims to address is
+            the protection of privacy.
+            Indeed, medical information is
+            sensitive because if for example your future employer knows that you have cancer.
+            He knows that you should be more often absent from work,
+            and in the economic interest of your future employer it could be you not hire.
+            The same goes for your bank, which would have to give you a loan or
+            for you health insurance. \\
+
+            This privacy protection comes into play in our context of making appointments because when
+            you schedule your appointment in your electronic agenda with your oncologist, therefore Google
+            knowns thats very sensitives information about you. \\
+
+            That's why some health professionals advise you to just put a cross in your
+            cross in your electronic diary and only refer to the small paper
+            given to you so that you don't store this information on your phone and by association to Google, Microsoft and others who clearly have an economic interest in
+            to not respect your privacy. \\
+
+        \section{Requirements}
+            \begin{enumerate}
+                \item Design of a smartphone application to manage medical appointments
+                \item Security by design
+                \item Does not replace your usual agenda
+                \item Reliability in terms of data consistency (and synchronization of these)
+            \end{enumerate}
+
+        \section{Project goals}
+            \begin{enumerate}
+                \item Continuation of Mr. Fahrni's project
+                \item Familiarisation with FHIR
+                \item Reliability of problems of synchonisation between FireCard and MIDATA
+                \item Preparation of the project for the Bachelor Thesis
+            \end{enumerate}
+
+        \pagebreak
+        \section{MIDATA}
+            MIDATA is a cloud platform that implements REST API FHIR
+            in order to allow heterogeneous systems to sync with each other in the
+            medical domain (EDI). \\
+
+            MIDATA is a non-profit cooperative that systematically encrypts
+            medical data that is audited regularly and has a large-scale project.
+            It is a large project that is much more secure than I could do and that's
+            why I use MIDATA as a backend and cannot develop my own.
+            And in addition, it uses FHIR that allows you to potentially
+            link this project to all others undertaken by the medical informatics department. \\
+
+            Midata has its source code in Open Source as well as its server in Switzerland.
+            These arguments allow us to say that MIDATA is much better suited for job than Google, Microsoft
+            and thus solves our problem of trust for the protection of privacy for
+            medical data.
+
+        \chapter{Design}
+            \section{Technologies}
+            React Native was the main technology used because those
+            used by medical informatics department and therefore non-negotiable. \\
+
+            With react native, Mr. Fahrni used Redux Toolkit to manage the states of
+            application, React-native-navigation to manage the navigation in the screens of the
+            the application. \\
+
+            I decided not to use Redux Toolkit because it made the project more
+            complexity. Indeed, redux allows to store a state
+            globals shared by all react components that prevent problem known as Props drilling
+            when you pass out your information component-to-component until his destination.
+            However having several different context in the application (different view models for each screen).
+            I didn't think it was necessary to have such a centralization and preferred to use
+            tool called Vercel SWR to handle asynchronous requests between application
+            and MIDATA.
+
+        \section{Architecture}
+            I have used a functional oriented architecture for the reason below:
+            \begin{enumerate}
+                \item It's a paradigm I've mastered
+                \item It's partly driven and planned in react
+                \item It's the most reliable thing I know
+                \item Javascript (by extension typescript here) is a functional language
+                \item Typescript allows a very great expressiveness of the types very favourable with functional programming pushed (way Haskell)
+            \end{enumerate}
+
+            Different concepts are used in this architecture:
+            \begin{itemize}
+                \item Immutability \\
+                Idea is imposed by react. In effect the state being an immutable object stored in the component must not be mutated,
+                It is necessary to recreate the entire copy of state with the modified information before calling the component's state setter.
+                React is structurally designed for immutability. And it allows for simpler unit testing because the
+                state manipulation functions are pure function
+
+                \item Lens and Optics \\
+                To manipulate immutable objects, generally approach and apply our state as much as possible,
+                avoided recursion. And even used a store to store it globally and share it between all components
+                components. However this state is not very composable and difficult to maintain and design even with tools like redux
+                Especially if you understand that MIDATA data is not flattened and nested with a lot of variance
+                (because the fhir spec makes field selection optional, which forces you to write a lot of code to handle all the cases)
+
+                Idea of lens/optic is to have a function that gets the information (getter) and also allows to transform it
+                (in a copy. CF immutability) into the all.
+                So I have the object fhir directly as a model stored in the state of my react components
+                and I manipulate it through these lenses. Analogy is that a lens allows to focus on a part of an image
+
+                \item Composition \\
+                What makes functional programming powerful is the composability (resp. decomposability) of functions
+                Effectively the lens/optics are very simple optics but compose to obtain a very complex lens
+                and each lens primitive is very simple and therefore reliable and easy to test and by strict typing
+                one avoids introducing bugs in the composition because one does not compose optics in any way. All follow the mathematical
+                mathematical laws of category theory as have f: B->C, g: A->B then f.g : A -> C
+                The lenses are in fact pure functions which are very well composed and which are able to perform all actions
+                that can be performed by the lens. In my case I used an optics-ts library which allows to use them simply.
+            \end{itemize}
+
+        \section{Composition}
+        What makes functional programming powerful is the composability (resp. decomposability) of functions
+        Effectively the lens/optics are very simple optics but composed to obtain a very complex lens
+        and each lens primitive is very simple and therefore reliable and easy to test and by strict typing
+        one avoids introducing bugs in the composition because one does not compose optics in any way. \\
+
+        All follow the mathematical laws of category theory as have f: B->C, g: A->B then f.g : A -> C
+        The lenses are in fact pure functions which are very well composed and which are able to perform all actions
+        that can be performed by the lens. \\
+
+        In my case I used an optics-ts library which allows to use them simply.
+
+
+    \section{Lens and Optics}
+            Idea of lens/optic is to have a function that gets the information (getter) and also allows to transform it (in a copy. CF immutability) in the all. So I have the object fhir directly as a model stored in the states of my react components and I manipulate it through these lenses. \\
+            Analogy is that a lens allows to focus on a part of an image
+            \begin{verbatim}
+import * as O from "optics-ts"
+
+// Ici on a une lens.png (d'où le suffix L) qui permet accédé à un champ name
+const nameL = O.optic<{name: string, age: number}>().prop("name")
+
+// ici on recuère le nom
+const name = O.get(nameL, {name: "bob", age: 23})
+// => name === "bob"
+
+// Ici on modifie le nom sans pour autant modifier le parametre / O.set est une fonction pure
+const copy = O.set(nameL, "jhon", {name: "bob", age: 23})
+// => copy = {name: "jhon", age: 23}
+
+// Ici on compose un lens.png qui recuère un utilisateur puis le nom
+const userNameL = O.optic<{user: {name: string, age: number}}>()
+    .prop("user")
+    .compose(nameL)
+
+// ici on recuère le nom
+const name2 = O.get(userNameL, {user: {name: "bob", age: 23}})
+// => name2 === "bob"
+
+// Ici on modifie le nom sans pour autant modifier le parametre / O.set est une fonction pure
+const copy2 = O.set(userNameL, "jhon", {user: {name: "bob", age: 23}})
+// => copy2 = {user: {name: "jhon", age: 23}}
+        \end{verbatim}
+        Here I have introduced prop lenses that focus on a property
+        but there are also `rewrite` lenses that allow to force the value of a calculated field useful to integrate invariant
+        in my case I use this to integrate the status of appointment according to the date of the day /
+        and the acceptance of the participants of it
+
+    \section{React Components}
+        React follows the functional principle and therefore promotes composability.
+        The component therefore have properties injected and return a hierarchical structure (composition) of graphic components
+        which in turn render to primary components that have specific code in the react renderer
+        (react-native in our case). \\
+
+        By definition the component should be as simple as possible which separates it into
+        to compose it later.
+        However, one of the paradoxes is that we share a domain model and the associated data
+        between several components, which generally implies a lot of boilerplate code until you get to the point where you are able to pass
+        This involves a lot of boilerplate code until you flatten it by taking the information in the component property and passing it to the child component property.
+        (problem known as prop drilling). \\
+
+        The idea is to share the information and the solution
+        The most common solution is to use a store that stores the data outside the react view and then graft the data into the component
+        The main problem with this method is that you have to use another library (react state manager) which in addition to centralizing the data makes it more complex because a block is much more difficult to compose.
+        In addition, on the component side, all the components tend to depend on the whole store, which reduces the composability and
+        This is a good example of how the complexity of a component can be reduced by the use of a monolithic store. \\
+
+        Furthermore, in addition to managing this shared state, it must also manage system interaction (here calls to the midata
+        to retrieve information, modification) and with this api management comes a syncronisation problem,
+        potential cache management, information management for activity indicators etc\ldots
+
+        The solution used and thus used a state local to the component and of the passed in property of the under component
+        So in our case all the data of a meeting are contained in an object
+        and for data like the api access token, and stored in a react context.
+        (solution included natively in react to avoid prop drilling) \\
+
+        data synchronisation is provided by SWR which is a react hook that uses the local state of the component and has a shared cache to avoid
+        has a shared cache to avoid making 10 of the same request in each component and which manages all the syncronization policy
+        fetch, refetch on stale data, refresh interval, refresh on network reconnection,
+        retry request on failure. \\
+
+        It also offers a mutate function that allows to indicate that a fetcher resource is state or even to
+        placeholding data so that the application displays this data while the hook retrieves the fresh information and does not
+        substitutes them.
+
+        \section{React Hooks}
+        A hook is a function that allows a react component to retrieve variables in order to display the component
+        and as the name suggests (react hook) it is a hook that comes to hook to the renderer react so that react can react to
+        that react can react to for example refresh certain component
+
+        Being a simple function that uses primitive hooks provided by react, this party serves as the
+        controller part in MVC, it binds the model and returns the info that the view will use.
+        the only difference is that it is the view that calls the hook.
+        and the view can and will call and depend on several hooks.
+
+        \section{Transaction}
+        Given the distributed system that the different smartphones form with the midata servers,
+        it is necessary to have a transaction management of the state for that a set of invariant are maintained via the lens (CF. lens)
+        and a version number is used to do concurrent REST resource management within the midiat API
+        If a resource is updated to an older version then the server will refuse it because there is a conflict between the
+        the current data of the server (which are more recent than that on which the current update tries) what
+        This is why it is necessary to have a special error handling for this one (409 conflict) in order to do like GIT
+        with the diff of your version vs that of the server and to resolve in good inteligence the conflicts via user
+        who will arbitrate the conflict. \\
+        The server also has a history of all versions potentially allowing
+        offer similar functionality to git.
+
+    \chapter{Conclusion}
+
+    I was able to familiarise myself with the tools and prepare well for my bachelor's thesis.
+    The project was delayed due to poor project management as we went with an Agile
+    the complexity of the project, I concluded with my advisor that this was not a good idea.
+    I concluded with my advisor that this was not the right method for the rest of the project
+    That's why we are going to use a Ganttt chart with a more traditional approach.
+
+    \appendix
+    
+    \chapter{Backlog}
+
+    \begin{figure}
+        \centering
+        \includegraphics[width=16cm]{./images/Project2_backlog}
+        \caption{Project 2 backlog}\label{fig:figure}
+    \end{figure}
+    
+
+\end{document}

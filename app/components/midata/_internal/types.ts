@@ -1,6 +1,6 @@
 export type MidataType = {
-    Patient: {
-
+    AppointmentSearchBundle: {
+        entry?: ({resource: MidataType["Appointment"]})[]
     },
     Appointment: {
         readonly resourceType: "Appointment",
@@ -12,7 +12,7 @@ export type MidataType = {
         patientInstruction?: string,
         start?: string,
         end?: string,
-        participant: MidataType["Participant"][]
+        participant?: MidataType["Participant"][]
     },
     AppointmentStatus: 'proposed' | 'pending' | 'booked' | 'arrived' | 'fulfilled' |
         'cancelled' | 'noshow' | 'entered-in-error' | 'checked-in' | 'waitlist',
@@ -27,21 +27,7 @@ export type MidataType = {
             }
         }
     },
-    ParticipantType: 'Patient' | 'Practitioner' | 'PractitionerRole' | 'RelatedPerson' 
+    ParticipantType: 'Patient' | 'Practitioner' | 'PractitionerRole' | 'RelatedPerson'
         | 'Device' | 'HealthcareService' | 'Location',
     ParticipantStatus: 'accepted' | 'declined' | 'tentative' | 'needs-action'
 }
-
-export type MidataEndpoints = {
-    '/Patient/{id}': {
-        'GET': {
-            request: {
-                
-            },
-            response: 
-                {status: 200, data: MidataType['Patient']} |
-                {status: 404} |
-                {status: number}
-        }
-    }
-} 

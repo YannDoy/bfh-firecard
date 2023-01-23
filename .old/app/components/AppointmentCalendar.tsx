@@ -35,7 +35,7 @@ export const AppointmentCalendar: FC<{
         style={{backgroundColor: "royalblue"}} />
     return <Text>{JSON.stringify(marksDates)}</Text>
     /*
-    return <Calendar
+    return <Index
         displayLoadingIndicator={isLoading}
         enableSwipeMonths={true}
         initialDate={dateTimeFormat(date)}

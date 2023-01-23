@@ -1,13 +1,12 @@
 import {FC} from "react";
 import {WithAppNavs} from "./index";
 import {SafeAreaView} from "react-native";
-import {useSession} from "../components/session";
+import {useMidataRevoke} from "../components/midata";
 import {Button} from "react-native-paper";
 
 export const Settings: FC<WithAppNavs<"Settings">> = () => {
-    const session = useSession()
-
+    const revoke = useMidataRevoke()
     return <SafeAreaView>
-        <Button onPress={() => session.stop()}>Logout</Button>
+        <Button onPress={revoke}>Logout</Button>
     </SafeAreaView>
 }
